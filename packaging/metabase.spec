@@ -1,5 +1,5 @@
 Name:           metabase
-Version:        0.53.7.x
+Version:        0.56.10.x
 Release:        %autorelease
 Summary:        Metabase is the easy, open-source way for everyone in your company to ask questions and learn from data.
 
@@ -17,7 +17,7 @@ BuildRequires:  gcc-c++
 
 
 %description
-Ollama is a local AI assistant that runs as a daemon.
+Metabase is the easy, open-source way for everyone to ask questions and learn from data.
 
 %prep
 %setup
