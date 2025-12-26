@@ -6,8 +6,9 @@ Summary:        Metabase is the easy, open-source way for everyone in your compa
 
 License:        GNU Affero General Public License (AGPL),
 URL:            https://github.com/metabase
+
 Source0:        https://github.com/metabase/metabase/archive/refs/tags/v%{version}.tar.gz
-Source1:        https://github.com/mwprado/metabased/archive/refs/heads/main.zip
+Source1:        https://github.com/mwprado/metabased/archive/refs/heads/main.tar.gz
 
 BuildArch:      %{_arch}
 	
