@@ -1,6 +1,7 @@
 Name:           metabase
 Version:        0.57.7
-Release:        %autorelease
+Release:        1%{?dist}
+
 Summary:        Metabase is the easy, open-source way for everyone in your company to ask questions and learn from data.
 
 License:        GNU Affero General Public License (AGPL),
