@@ -1,5 +1,5 @@
 Name:           metabase
-Version:        0.56.10.x
+Version:        0.57.7
 Release:        %autorelease
 Summary:        Metabase is the easy, open-source way for everyone in your company to ask questions and learn from data.
 
