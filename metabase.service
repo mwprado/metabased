@@ -1,0 +1,25 @@
+[Unit]
+Description=Metabase server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=metabase
+Group=metabase
+EnvironmentFile=-/etc/sysconfig/metabase
+WorkingDirectory=/var/lib/metabase
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /usr/libexec/metabase/metabase.jar
+Restart=on-failure
+RestartSec=5
+SuccessExitStatus=143
+
+# hardening básico
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/metabase /var/log/metabase
+
+[Install]
+WantedBy=multi-user.target
