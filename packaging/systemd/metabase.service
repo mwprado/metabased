@@ -1,0 +1,17 @@
+[Unit]
+Description=Metabase server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=metabase
+Group=metabase
+EnvironmentFile=-/etc/sysconfig/metabase
+WorkingDirectory=/var/lib/metabase
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /usr/libexec/metabase/metabase.jar
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
