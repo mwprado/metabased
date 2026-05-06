@@ -1,5 +1,5 @@
 Name:           metabase
-Version:        0.57.7
+Version:        0.59.6
 Release:        1%{?dist}
 Summary:        Open Source Business Intelligence and Analytics (Metabase)
 
@@ -14,7 +14,8 @@ BuildArch:      noarch
 Source0:        https://github.com/mwprado/rpm-pck-metabase/archive/refs/heads/main.zip
 
 # Source1 contains the official upstream OSS application JAR.
-Source1:        https://downloads.metabase.com/v%{version}/metabase.jar
+# Current Metabase release download URLs include the .x suffix.
+Source1:        https://downloads.metabase.com/v%{version}.x/metabase.jar
 
 BuildRequires:  unzip
 BuildRequires:  systemd-rpm-macros
@@ -90,5 +91,9 @@ exit 0
 %dir %attr(0750,metabase,metabase) %{_localstatedir}/log/metabase
 
 %changelog
+* Wed May 06 2026 Moacyr Prado <mwprado@localhost> - 0.59.6-1
+- Update to Metabase 0.59.6
+- Use upstream JAR URL with .x release suffix
+
 * Tue May 05 2026 Moacyr Prado <mwprado@localhost> - 0.57.7-1
 - Initial RPM packaging baseline for Metabase 0.57.7
