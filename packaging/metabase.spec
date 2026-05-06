@@ -7,30 +7,17 @@ License:        AGPL-3.0-only
 URL:            https://www.metabase.com/
 BuildArch:      noarch
 
-# Fedora 44 currently resolves Java 25 in the default buildroot. Keep the
-# package name centralized so later Fedora/EL conditionals can be added cleanly.
 %global metabase_java_pkg java-25-openjdk
-%global metabase_java_home %{_jvmdir}/java-25-openjdk
 
 # Source0 contains this RPM packaging repository. The spec intentionally uses
 # files under packaging/ as the single source of truth for service/config assets.
 Source0:        https://github.com/mwprado/rpm-pck-metabase/archive/refs/heads/main.zip
 
-# Source1 contains the upstream Metabase source tree.
-Source1:        https://github.com/metabase/metabase/archive/refs/tags/v%{version}.tar.gz
+# Source1 contains the official upstream OSS application JAR.
+Source1:        https://downloads.metabase.com/v%{version}/metabase.jar
 
-BuildRequires:  bash
-BuildRequires:  coreutils
-BuildRequires:  findutils
-BuildRequires:  sed
-BuildRequires:  tar
 BuildRequires:  unzip
 BuildRequires:  systemd-rpm-macros
-
-BuildRequires:  %{metabase_java_pkg}-devel
-BuildRequires:  nodejs
-BuildRequires:  yarnpkg
-BuildRequires:  clojure
 
 Requires:       %{metabase_java_pkg}-headless
 Requires:       shadow-utils
@@ -41,8 +28,8 @@ Requires(postun): systemd
 
 %description
 Metabase is an open source business intelligence tool that lets everyone work
-with data. This package builds Metabase from source and installs the resulting
-uberjar as a systemd service.
+with data. This package installs the official upstream OSS application JAR and
+runs it as a systemd service.
 
 %prep
 %setup -q -T -c -n wsp
@@ -53,22 +40,8 @@ unzip -q %{SOURCE0} -d rpm-source
 pkgroot="$(find rpm-source -mindepth 1 -maxdepth 1 -type d | head -n 1)"
 cp -a "${pkgroot}/packaging/." rpm-files/
 
-# Extract upstream Metabase source from Source1 into ./metabase.
-mkdir -p metabase
-tar -xzf %{SOURCE1} -C metabase --strip-components=1
-
 %build
-pushd metabase
-
-export MB_EDITION=oss
-export CI=true
-export JAVA_HOME=%{metabase_java_home}
-
-# Build the upstream uberjar. This is the initial working baseline; later
-# revisions should address offline/reproducible dependency use.
-./bin/build.sh
-
-popd
+# Nothing to build. The application JAR is provided by upstream as Source1.
 
 %install
 install -d %{buildroot}%{_libexecdir}/metabase
@@ -79,8 +52,7 @@ install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_localstatedir}/lib/metabase
 install -d %{buildroot}%{_localstatedir}/log/metabase
 
-install -m 0644 metabase/target/uberjar/metabase.jar \
-  %{buildroot}%{_libexecdir}/metabase/metabase.jar
+install -m 0644 %{SOURCE1} %{buildroot}%{_libexecdir}/metabase/metabase.jar
 
 install -m 0644 rpm-files/systemd/metabase.service \
   %{buildroot}%{_unitdir}/metabase.service
@@ -109,8 +81,6 @@ exit 0
 %systemd_postun_with_restart metabase.service
 
 %files
-%license metabase/LICENSE.txt
-%doc metabase/README.md
 %{_libexecdir}/metabase/metabase.jar
 %config(noreplace) %{_sysconfdir}/sysconfig/metabase
 %{_unitdir}/metabase.service
