@@ -27,7 +27,7 @@ BuildRequires:  nodejs
 BuildRequires:  yarnpkg
 BuildRequires:  clojure
 
-Requires:       java-21-openjdk-headless
+Requires:       java-25-openjdk-devel
 Requires:       shadow-utils
 Requires(pre):  shadow-utils
 Requires(post): systemd
