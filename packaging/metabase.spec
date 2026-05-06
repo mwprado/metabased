@@ -7,8 +7,13 @@ License:        AGPL-3.0-only
 URL:            https://www.metabase.com/
 BuildArch:      noarch
 
-# Source0 contains RPM packaging assets: systemd unit, sysusers, tmpfiles,
-# sysconfig and future patches/scripts.
+# Fedora 44 currently resolves Java 25 in the default buildroot. Keep the
+# package name centralized so later Fedora/EL conditionals can be added cleanly.
+%global metabase_java_pkg java-25-openjdk
+%global metabase_java_home %{_jvmdir}/java-25-openjdk
+
+# Source0 contains this RPM packaging repository. The spec intentionally uses
+# files under packaging/ as the single source of truth for service/config assets.
 Source0:        https://github.com/mwprado/rpm-pck-metabase/archive/refs/heads/main.zip
 
 # Source1 contains the upstream Metabase source tree.
@@ -22,12 +27,12 @@ BuildRequires:  tar
 BuildRequires:  unzip
 BuildRequires:  systemd-rpm-macros
 
-BuildRequires:  java-21-openjdk-devel
+BuildRequires:  %{metabase_java_pkg}-devel
 BuildRequires:  nodejs
 BuildRequires:  yarnpkg
 BuildRequires:  clojure
 
-Requires:       java-25-openjdk-devel
+Requires:       %{metabase_java_pkg}-headless
 Requires:       shadow-utils
 Requires(pre):  shadow-utils
 Requires(post): systemd
@@ -57,10 +62,10 @@ pushd metabase
 
 export MB_EDITION=oss
 export CI=true
-export JAVA_HOME=%{_jvmdir}/java-21-openjdk
+export JAVA_HOME=%{metabase_java_home}
 
-# Build the upstream uberjar. This is intentionally left as the first working
-# baseline; later revisions should address offline/reproducible dependency use.
+# Build the upstream uberjar. This is the initial working baseline; later
+# revisions should address offline/reproducible dependency use.
 ./bin/build.sh
 
 popd
